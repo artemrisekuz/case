@@ -1,0 +1,10 @@
+<button id="openCaseBtn">Открыть кейс</button>
+<div id="result"></div>
+
+<script>
+  document.getElementById("openCaseBtn").addEventListener("click", function() {
+    const items = ["Редкий предмет", "Обычный предмет", "Очень редкий предмет"];
+    const result = items[Math.floor(Math.random() * items.length)];
+    document.getElementById("result").textContent = `Вы получили: ${result}`;
+  });
+</script>
