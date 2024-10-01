@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Opening with Cash</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .cash-container {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .case-container {
+            width: 600px;
+            margin: 0 auto;
+            position: relative;
+            border: 2px solid #333;
+            padding: 10px;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        .items {
+            display: flex;
+            position: relative;
+            width: 2000px;
+            transition: transform 0.7s ease; /* Ускоряем анимацию до 0.7 секунд */
+        }
+
+        .item {
+            flex: 0 0 150px;
+            padding: 20px;
+            margin: 5px;
+            background-color: #eaeaea;
+            border: 2px solid #333;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .item img {
+            max-width: 100px;
+        }
+
+        .open-case-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #ff9800;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .open-case-btn:hover {
+            background-color: #e68900;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+            color: red;
+            z-index: 1000;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Case Opening Simulation with Cash</h1>
+
+<div class="cash-container">
+    Cash: <span id="cash">0</span>
+</div>
+
+<div class="case-container">
+    <div class="arrow">▼</div>
+    <div class="items" id="items">
+        <!-- Примеры предметов -->
+        <div class="item"><img src="https://via.placeholder.com/100?text=Item1" alt="Item 1"><br>Item 1</div>
+        <div class="item"><img src="https://via.placeholder.com/100?text=Item2" alt="Item 2"><br>Item 2</div>
+        <div class="item"><img src="https://via.placeholder.com/100?text=Item3" alt="Item 3"><br>Item 3</div>
+        <div class="item"><img src="https://via.placeholder.com/100?text=Item4" alt="Item 4"><br>Item 4</div>
+        <div class="item"><img src="https://via.placeholder.com/100?text=Item5" alt="Item 5"><br>Item 5</div>
+        <div class="item"><img src="https://via.placeholder.com/100?text=Item6" alt="Item 6"><br>Item 6</div>
+        <div class="item"><img src="https://via.placeholder.com/100?text=Item7" alt="Item 7"><br>Item 7</div>
+        <div class="item"><img src="https://via.placeholder.com/100?text=Item8" alt="Item 8"><br>Item 8</div>
+    </div>
+</div>
+
+<button class="open-case-btn" onclick="openCase()">Open Case (Cost: 30 Cash)</button>
+<div class="error-message" id="error-message"></div>
+
+<script>
+    let cash = 0;
+    let cashInterval;
+    const cashDisplay = document.getElementById('cash');
+    const errorMessage = document.getElementById('error-message');
+    const costToOpenCase = 30;
+
+    // Каждую секунду добавляется 5 cash
+    function addCash() {
+        cash += 5;
+        cashDisplay.textContent = cash;
+    }
+
+    // Начать генерацию cash
+    function startGeneratingCash() {
+        cashInterval = setInterval(addCash, 1000); // Добавляет 5 cash каждую секунду
+    }
+
+    // Открытие кейса
+    function openCase() {
+        if (cash >= costToOpenCase) {
+            cash -= costToOpenCase;
+            cashDisplay.textContent = cash;
+            errorMessage.textContent = ''; // Убираем сообщение об ошибке, если оно было
+
+            const items = document.getElementById('items');
+            const itemWidth = 150; // ширина одного предмета
+            const visibleItems = 4; // сколько предметов видно на экране
+
+            // Генерация случайного числа для выбора предмета
+            const randomItem = Math.floor(Math.random() * 8);
+            
+            // Рассчитываем позицию, чтобы выбранный предмет был в центре
+            const offset = (randomItem * itemWidth) - ((visibleItems / 2) * itemWidth) + (itemWidth / 2);
+
+            // Анимация длится 7 секунд (несколько циклов)
+            let spins = 10; // Количество оборотов до остановки
+            let currentSpin = 0;
+
+            function spin() {
+                items.style.transition = 'transform 0.7s ease';
+                items.style.transform = `translateX(-${offset}px)`;
+                currentSpin++;
+                
+                if (currentSpin < spins) {
+                    setTimeout(spin, 700); // Повторяем анимацию каждые 0.7 секунд
+                }
+            }
+
+            spin();
+
+        } else {
+            errorMessage.textContent = 'Not enough cash to open case!';
+        }
+    }
+
+    // Запуск генерации cash при загрузке страницы
+    window.onload = startGeneratingCash;
+</script>
+
+</body>
+</html>
